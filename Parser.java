@@ -21,7 +21,12 @@ public class Parser {
 
     private Node factor() throws Exception {
         Token token = current;
-        if (token.getType().equals(EnumToken.NUMBER)) {
+
+        if (token.getType().equals(EnumToken.VAR)) {
+            checkTokenType(EnumToken.VAR);
+            return new Var(token);
+        }
+        else if (token.getType().equals(EnumToken.NUMBER)) {
             checkTokenType(EnumToken.NUMBER);
             return new Number(token);
         }
@@ -51,9 +56,9 @@ public class Parser {
     }
 
     private Node expr () throws Exception {
-        List<EnumToken> ops = Arrays.asList(EnumToken.PLUS, EnumToken.MINUS);
+        List<EnumToken> ops = Arrays.asList(EnumToken.PLUS, EnumToken.MINUS, EnumToken.ASSIGN);
         Node result = term();
-        while (ops.contains(current.getType())) {
+        while (ops.contains(current.getType()) && !current.getType().equals(EnumToken.EXPEND)) {
             Token token = current;
             if (token.getType().equals(EnumToken.PLUS)) {
                 checkTokenType(EnumToken.PLUS);
@@ -61,10 +66,15 @@ public class Parser {
             if (token.getType().equals(EnumToken.MINUS)) {
                 checkTokenType(EnumToken.MINUS);
             }
-            result = new BinOp(result, token, term());
+            if (token.getType().equals(EnumToken.ASSIGN)) {
+                checkTokenType(EnumToken.ASSIGN);
+            }
+            result = new BinOp(result, token, expr());
         }
+        System.out.println(result);
         return result;
     }
+
 
     public Node parse() throws Exception {
         return expr();

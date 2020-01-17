@@ -8,5 +8,8 @@ public enum EnumToken {
     RPAREN,
     EOL,
     VAR,
-    ASSIGN
+    ASSIGN,
+    EXPEND,
+    BEGIN,
+    END
 }

@@ -56,11 +56,42 @@ public class Lexer {
             }
 
             if (Character.isLetter(currentChar)) {
-                Character temp = currentChar;
-                forward();
-                return new Token(EnumToken.VAR, "" + temp);
+                String temp = "";
+                while (currentChar != ' ') {
+                    temp += currentChar;
+                    forward();
+                }
+                System.out.println(temp);
+                if (temp.equals("BEGIN")) {
+                    System.out.println("beg");
+                    return new Token(EnumToken.BEGIN, "" + temp);
+                }
+                else if (temp.equals("END.")) {
+                    System.out.println("end");
+                    return new Token(EnumToken.END, "" + temp);
+                }
+                else {
+                    return new Token(EnumToken.VAR, "" + temp);
+                }
             }
 
+            if (currentChar == ':') {
+                String temp = "" + currentChar;
+                forward();
+                if (currentChar == '=') {
+                    temp += currentChar;
+                    System.out.println("hey");
+                    forward();
+                    return new Token(EnumToken.ASSIGN, temp);
+                }
+            }
+
+            if (currentChar == ';') {
+                Character temp = currentChar;
+                forward();
+                return new Token(EnumToken.EXPEND, "" + temp);
+
+            }
 
             throw new Exception ("Parsing error");
         }
